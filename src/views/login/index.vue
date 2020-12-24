@@ -39,7 +39,7 @@
 </template>
 
 <script>
-import request from '@/utils/request'
+import { login } from '@/api/user.js'
 
 export default {
   name: 'LoginIndex',
@@ -101,12 +101,7 @@ export default {
       // 开启Loading状态
       this.loginLoading = true
 
-      request({
-        method: 'POST',
-        url: '/toLogin',
-        // data 用来设置 POST 请求体
-        data: this.user
-      }).then(res => {
+      login(this.user).then(res => {
         console.log(res)
 
         // 登录成功
