@@ -1,6 +1,5 @@
 <template>
-  <div>
-    <div class="login-container">
+  <div class="login-container">
       <!--
       el-form 表单组件
       每个表单项都必须使用 el-form-item 组件包裹
@@ -35,7 +34,6 @@
         </el-form>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
@@ -112,6 +110,10 @@ export default {
 
         // 关闭 loading
         this.loginLoading = false
+
+        // 将接口返回的用户数据存储在本地，方便数据共享，本地默认只保存字符串
+        // 存储对象和数组类型的数据，将其转换为 Josn 格式较好
+        window.localStorage.setItem('user', JSON.stringify(res.data.data))
       }).catch(err => {
         console.log('登录失败', err)
         console.log(this.user)
