@@ -6,7 +6,7 @@
     >
       <app-aside
         class="aside-menu"
-        :is-collapse="isCollapse"></app-aside>
+        :is-collapse="isCollapse"/>
     </el-aside>
     <el-container>
       <el-header class="header">

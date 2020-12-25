@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Login from '@/views/login'
 import Home from '@/views/home'
 import Layout from '@/views/layout'
+import Article from '@/views/article'
 import NProgress from 'nprogress'
 
 Vue.use(VueRouter)
@@ -22,7 +23,13 @@ const routes = [
       path: '', // 为空则是作为父组件的默认子路由
       name: 'home',
       component: Home
-    }]
+    },
+    {
+      path: '/article',
+      name: 'article',
+      component: Article
+    }
+    ]
   }
 ]
 

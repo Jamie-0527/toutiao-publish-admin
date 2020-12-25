@@ -65,4 +65,9 @@ export default {
       padding-left: 5px;
     }
   }
+
+  .el-menu-vertical-demo:not(.el-menu--collapse) {
+    width: 200px;
+    min-height: 400px;
+  }
 </style>
