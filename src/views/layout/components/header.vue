@@ -1,7 +1,13 @@
 <template>
   <div class="header-container">
     <div>
-      <i class="el-icon-s-fold"></i>
+      <i
+        :class="{
+        'el-icon-s-fold': isCollapsed,
+        'el-icon-s-unfold': !isCollapsed
+        }"
+        @click="isCollapsed = !isCollapsed"
+        ></i>
       <span>江苏传智播客科技教育有限公司</span>
     </div>
     <el-dropdown>
@@ -27,7 +33,8 @@ export default {
   props: {},
   data () {
     return {
-      user: {}
+      user: {},
+      isCollapsed: true // 侧边菜单栏的展示状态
     }
   },
   computed: {},
@@ -39,7 +46,7 @@ export default {
   methods: {
     loadUserProfiles () {
       getUserProfile().then(res => {
-        this.user = res.data.data()
+        this.user = res.data.data
       })
     }
   }

@@ -107,7 +107,10 @@ export default {
           message: '登录成功',
           type: 'success'
         })
-
+        // 跳转页面
+        this.$router.push({
+          name: 'home'
+        })
         // 关闭 loading
         this.loginLoading = false
 
