@@ -12,32 +12,45 @@
       <!-- 数据筛选表单 -->
       <el-form ref="form" :model="form" label-width="40px" size="mini">
         <el-form-item label="状态">
-          <el-radio-group v-model="form.resource">
-            <el-radio label="全部"></el-radio>
-            <el-radio label="草稿"></el-radio>
-            <el-radio label="待审核"></el-radio>
-            <el-radio label="审核通过"></el-radio>
-            <el-radio label="审核失败"></el-radio>
-            <el-radio label="已删除"></el-radio>
+          <el-radio-group v-model="status">
+            <el-radio :label="null">全部</el-radio>
+            <el-radio :label="0">草稿</el-radio>
+            <el-radio :label="1">待审核</el-radio>
+            <el-radio :label="2">审核通过</el-radio>
+            <el-radio :label="3">审核失败</el-radio>
+            <el-radio :label="4">已删除</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="频道">
-          <el-select v-model="form.region" placeholder="请选择频道">
-            <el-option label="区域一" value="shanghai"></el-option>
-            <el-option label="区域二" value="beijing"></el-option>
+          <el-select
+            v-model="channelsId"
+            placeholder="请选择频道">
+            <el-option
+              :label="channel.name"
+              :value="channel.id"
+              v-for="(channel, index) in channels"
+              :key="index"
+            ></el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="日期">
           <el-date-picker
-            v-model="form.date1"
+            v-model="rangeDate"
             type="datetimerange"
             start-placeholder="开始日期"
             end-placeholder="结束日期"
-            :default-time="['12:00:00']">
+            :default-time="['12:00:00']"
+            format="yyyy-MM-dd"
+            value-format="yyyy-MM-dd"
+          >
           </el-date-picker>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="onSubmit">查询</el-button>
+          <el-button
+            type="primary"
+            @click="loadArticle(1)"
+            :disabled="loading"
+          >查询</el-button>
         </el-form-item>
       </el-form>
       <!-- /数据筛选表单 -->
@@ -54,6 +67,7 @@
         style="width: 100%"
         class="list-table"
         size="mini"
+        :v-loadig="loading"
       >
         <el-table-column
           prop="date"
@@ -118,7 +132,11 @@
       <el-pagination
         layout="prev, pager, next"
         background
-        :total="1000">
+        :total="totalCount"
+        @current-change="onCurrentChange"
+        :page-size="pageSize"
+        :disabled="loading"
+      >
       </el-pagination>
       <!-- /列表分页 -->
     </el-card>
@@ -126,7 +144,7 @@
 </template>
 
 <script>
-import { getArticles } from '@/api/article'
+import { getArticles, getArticleChannels } from '@/api/article'
 export default {
   name: 'ArticleIndex',
   components: {},
@@ -150,26 +168,52 @@ export default {
         { status: 2, text: '审核通过', type: 'success' }, // 2
         { status: 3, text: '审核失败', type: 'warning' }, // 3
         { status: 4, text: '已删除', type: 'danger' } // 4
-      ]
+      ],
+      totalCount: 0, // 总数据条数
+      pageSize: 20, // 每一页数据条数
+      status: null, // 筛选文章状态，null-->全部
+      channels: [], // 文章频道列表
+      channelsId: null, // 查询文章频道
+      rangeDate: null, // 筛选日期范围
+      loading: true // 表单数据加载中的 loading 状态
     }
   },
   computed: {},
   watch: {},
   created () {
-    this.loadArticle()
+    this.loadChannels()
+    this.loadArticle(1)
   },
   mounted () {},
   methods: {
-    loadArticle () {
-      getArticles().then(res => {
-        this.articles = res.data.data.results
+    loadArticle (page = 1) {
+      // 开启 loading 状态
+      this.loading = true
+      getArticles({
+        page,
+        per_page: this.pageSize,
+        status: this.status,
+        channels_id: this.channelsId,
+        begin_pubdata: this.rangeDate ? this.rangeDate[0] : null,
+        end_pubdata: this.rangeDate ? this.rangeDate[1] : null
+      }).then(res => {
+        // this.articles = res.data.data.results
+        // this.totalCount = res.data.data.total_count
+        const { results, total_count: totalCount } = res.data.data
+        this.articles = results
+        this.totalCount = totalCount
+
+        // 关闭 loading 状态
+        this.loading = false
       })
-    },
-    onSubmit () {
-      console.log('submit!')
     },
     onCurrentChange (page) {
       this.loadArticle(page)
+    },
+    loadChannels () {
+      getArticleChannels().then(res => {
+        this.channels = res.data.data.channels
+      })
     }
   }
 }

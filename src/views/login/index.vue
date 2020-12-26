@@ -108,9 +108,7 @@ export default {
           type: 'success'
         })
         // 跳转页面
-        this.$router.push({
-          name: 'home'
-        })
+        this.$router.push('/')
         // 关闭 loading
         this.loginLoading = false
 
