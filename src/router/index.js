@@ -4,6 +4,7 @@ import Login from '@/views/login'
 import Home from '@/views/home'
 import Layout from '@/views/layout'
 import Article from '@/views/article'
+import Publish from '@/views/publish'
 import NProgress from 'nprogress'
 
 Vue.use(VueRouter)
@@ -19,21 +20,28 @@ const routes = [
     // 如果存在默认的子路由，父路由不需要起名字，浏览器会显示警告，但不会报错
     // name: 'layout',
     component: Layout,
-    children: [{
-      path: '', // 为空则是作为父组件的默认子路由
-      name: 'home',
-      component: Home
-    },
-    {
-      path: '/article',
-      name: 'article',
-      component: Article
-    }
+    children: [
+      {
+        path: '/', // 为空则是作为父组件的默认子路由
+        name: 'home',
+        component: Home
+      },
+      {
+        path: '/article',
+        name: 'article',
+        component: Article
+      },
+      {
+        path: '/publish',
+        name: 'publish',
+        component: Publish
+      }
     ]
   }
 ]
 
 const router = new VueRouter({
+  mode: 'history',
   routes
 })
 
